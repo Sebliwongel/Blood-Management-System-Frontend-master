@@ -17,6 +17,15 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+export const login = async (username, password) => {
+  try {
+    const response = await apiClient.post('/donor/login', { username, password });
+    return response.data; // Contains token and user details
+  } catch (error) {
+    throw error.response ? error.response.data : new Error('Login failed');
+  }
+};
+
 export const fetchDonors = async () => {
   try {
     const response = await api.get('/donor');  // Adjust to your route
@@ -82,7 +91,7 @@ export const updateDonor = async (donorId, donorData) => {
   
   export const createHospital = async (hospitalData) => {
     try {
-      const response = await api.post("/hospital", hospitalData);
+      const response = await api.post("/hospitals", hospitalData);
       return response.data;
     } catch (error) {
       console.error("Error creating hospital:", error.response?.data || error.message);

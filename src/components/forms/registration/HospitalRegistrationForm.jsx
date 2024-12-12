@@ -1,27 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-function HospitalRegistrationForm({ formData, errorMessage, onSubmit }) {
-  const [localFormData, setLocalFormData] = useState(formData);  // Local state for form fields
-
-  // Synchronize localFormData with the incoming formData prop
-  useEffect(() => {
-    setLocalFormData(formData);
-  }, [formData]);
-
-  // Handle changes for all fields including confirmPassword
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setLocalFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
+function HospitalRegistrationForm({ formData, errorMessage, onSubmit, handleChange }) {
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault();  // Prevent default form submission to handle it manually
-        onSubmit(localFormData);
+        e.preventDefault();
+        onSubmit(formData);
       }}
       className="bg-white shadow-lg rounded-lg p-6 space-y-4 w-96"
     >
@@ -30,8 +14,8 @@ function HospitalRegistrationForm({ formData, errorMessage, onSubmit }) {
         <input
           type="text"
           name="name"
-          value={localFormData.name}
-          onChange={handleInputChange}  // Use handleInputChange for all fields
+          value={formData.name}
+          onChange={handleChange}  // Pass the handleChange function from parent
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           required
         />
@@ -42,8 +26,8 @@ function HospitalRegistrationForm({ formData, errorMessage, onSubmit }) {
         <input
           type="text"
           name="address"
-          value={localFormData.address}
-          onChange={handleInputChange}
+          value={formData.address}
+          onChange={handleChange}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           required
         />
@@ -54,8 +38,8 @@ function HospitalRegistrationForm({ formData, errorMessage, onSubmit }) {
         <input
           type="email"
           name="email"
-          value={localFormData.email}
-          onChange={handleInputChange}
+          value={formData.email}
+          onChange={handleChange}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           required
         />
@@ -66,8 +50,8 @@ function HospitalRegistrationForm({ formData, errorMessage, onSubmit }) {
         <input
           type="text"
           name="username"
-          value={localFormData.username}
-          onChange={handleInputChange}
+          value={formData.username}
+          onChange={handleChange}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           required
         />
@@ -78,8 +62,8 @@ function HospitalRegistrationForm({ formData, errorMessage, onSubmit }) {
         <input
           type="password"
           name="password"
-          value={localFormData.password}
-          onChange={handleInputChange}
+          value={formData.password}
+          onChange={handleChange}
           className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           required
         />
@@ -91,8 +75,8 @@ function HospitalRegistrationForm({ formData, errorMessage, onSubmit }) {
         <input
           type="password"
           name="confirmPassword"
-          value={localFormData.confirmPassword}
-          onChange={handleInputChange}  // This now uses the same handler
+          value={formData.confirmPassword}
+          onChange={handleChange}  // Use handleChange from parent here as well
           className="mt-1 px-4 py-2 border border-gray-300 rounded focus:ring-red-500 focus:border-red-500"
           required
           minLength={6}
