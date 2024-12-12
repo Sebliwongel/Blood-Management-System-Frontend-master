@@ -17,13 +17,19 @@ import IndividualRegistrationPage from "./page/registration/individual/Individua
 import RegistrationPage from "./page/registration/RegistrationPage.jsx";
 import RegistrationSuccess from "./page/registration/RegistrationSuccessPage.jsx";
 import StoreManagerDashboardPage from "./page/dashboard/admin/StoreManagerDashboardPage.jsx";
+import ForgotPasswordPage from"./page/login/ForgotPasswordPage.jsx";
+import ResetPasswordPage from "./page/login/ResetPasswordPage.jsx";
+import QualificationPage from "./page/registration/individual/QualificationPage.jsx";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
+      <Route path="/resetpassword" element={<ResetPasswordPage  />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/awareness" element={<AwarenessPage />} />
+      <Route path="/Qualification" element={<QualificationPage />} />
 
       {/* Registration Routes */}
       <Route path="/registration">

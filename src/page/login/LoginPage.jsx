@@ -103,12 +103,12 @@
 // export default LoginPage;
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../../../services/apiService";
+import { useNavigate, Link } from "react-router-dom";
 import NavBar from "../../components/common/NavBar";
+import { donorLogin } from "../../services/apiservice";
 
 function LoginPage() {
-  const [email, setemail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -117,8 +117,9 @@ function LoginPage() {
     e.preventDefault();
 
     try {
-      const { token, donor } = await login(email, password);
-      
+      // Replace with your login API call
+      const { token, donor } = await donorLogin(email, password);
+
       // Save token and donor details to localStorage or context
       localStorage.setItem("token", token);
       localStorage.setItem("donor", JSON.stringify(donor));
@@ -146,8 +147,8 @@ function LoginPage() {
           {error && <p className="text-red-500 text-center">{error}</p>}
 
           <div className="flex flex-col">
-            <label htmlFor="username" className="text-gray-700 font-semibold">
-              Username
+            <label htmlFor="email" className="text-gray-700 font-semibold">
+              Email
             </label>
             <input
               type="text"
@@ -155,7 +156,7 @@ function LoginPage() {
               id="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setemail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
@@ -183,6 +184,13 @@ function LoginPage() {
           >
             Log In
           </button>
+
+          {/* Forgot Password Link */}
+          <div className="text-center mt-4">
+            <Link to="/forgotpassword" className="text-red-600 hover:underline">
+              Forgot Password?
+            </Link>
+          </div>
         </form>
       </div>
     </div>
@@ -190,4 +198,5 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
 

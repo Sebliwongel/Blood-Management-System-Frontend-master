@@ -17,9 +17,9 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export const login = async (username, password) => {
+export const donorLogin = async (email, password) => {
   try {
-    const response = await apiClient.post('/donor/login', { username, password });
+    const response = await apiClient.post('/donor/login', { email, password });
     return response.data; // Contains token and user details
   } catch (error) {
     throw error.response ? error.response.data : new Error('Login failed');
@@ -91,13 +91,17 @@ export const updateDonor = async (donorId, donorData) => {
   
   export const createHospital = async (hospitalData) => {
     try {
+      console.log("Sending hospital data:", hospitalData);
       const response = await api.post("/hospitals", hospitalData);
+      console.log("Hospital created:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error creating hospital:", error.response?.data || error.message);
       throw error;
     }
   };
+  
+  
   
   // Update Hospital (PUT request - full update)
 export const updateHospital = async (hospitalId, hospitalData) => {

@@ -135,7 +135,8 @@ function HospitalRegistrationPage() {
       !formData.address ||
       !formData.email ||
       !formData.username ||
-      !formData.password
+      !formData.password  ||
+      !formData.confirmPassword
       // !formData.confirmPassword
     ) {
       setErrorMessage("Please fill in all fields.");
@@ -159,7 +160,7 @@ function HospitalRegistrationPage() {
       address: formData.address,
       email: formData.email,
       username: formData.username,
-      passord:formData.password
+      password:formData.password
       });
       console.log("Hospital registered successfully:", response);
       navigate("/registration/hospital/success");
