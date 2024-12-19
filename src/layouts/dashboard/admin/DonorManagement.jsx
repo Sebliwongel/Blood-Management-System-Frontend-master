@@ -1,37 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { fetchDonors, updateDonor, deleteDonor } from "./../../../services/apiservice"; // Make sure these functions are defined in apiService
 
 const DonorManagement = () => {
-  const [donorList, setDonorList] = useState([
-    {
-      id: 1,
-      name: "Jane Smith",
-      username: "janesmith",
-      email: "janesmith@example.com",
-      active: true,
-    },
-    {
-      id: 2,
-      name: "John Doe",
-      username: "johndoe",
-      email: "johndoe@example.com",
-      active: true,
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      username: "alicej",
-      email: "alice.j@example.com",
-      active: false,
-    },
-  ]);
+  const [donorList, setDonorList] = useState([]);
+  const [loading, setLoading] = useState(true); // for loading state
+  const [error, setError] = useState(null); // for error handling
 
-  const toggleDonorActiveStatus = (id) => {
-    setDonorList((prevList) =>
-      prevList.map((donor) =>
-        donor.id === id ? { ...donor, active: !donor.active } : donor
-      )
-    );
+  // Fetch donors on component mount
+  useEffect(() => {
+    const getDonor = async () => {
+      try {
+        const donor= await fetchDonors(); // Call API to get donor list
+        setDonorList(donor);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load donors.");
+        setLoading(false);
+      }
+    };
+
+    getDonor();
+  }, []);
+
+  // Toggle the donor active status
+  const toggleDonorActiveStatus = async (id, currentStatus) => {
+    try {
+      const updatedDonor = await updateDonor(id, { active: !currentStatus });
+      setDonorList((prevList) =>
+        prevList.map((donor) =>
+          donor.id === id ? { ...donor, active: updatedDonor.active } : donor
+        )
+      );
+    } catch (err) {
+      console.error("Error updating donor status", err);
+    }
   };
+
+  // Handle donor deletion
+  const handleDeleteDonor = async (id) => {
+    try {
+      await deleteDonor(id); // Call API to delete donor
+      setDonorList((prevList) => prevList.filter((donor) => donor.id !== id));
+    } catch (err) {
+      console.error("Error deleting donor", err);
+    }
+  };
+
+  if (loading) {
+    return <div>Loading donors...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -71,9 +92,7 @@ const DonorManagement = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        donor.active
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
+                        donor.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                       }`}
                     >
                       {donor.active ? "Active" : "Inactive"}
@@ -81,14 +100,18 @@ const DonorManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
-                      onClick={() => toggleDonorActiveStatus(donor.id)}
+                      onClick={() => toggleDonorActiveStatus(donor.id, donor.active)}
                       className={`${
-                        donor.active
-                          ? "bg-red-100 text-red-600 hover:bg-red-200"
-                          : "bg-green-100 text-green-600 hover:bg-green-200"
+                        donor.active ? "bg-red-100 text-red-600 hover:bg-red-200" : "bg-green-100 text-green-600 hover:bg-green-200"
                       } px-3 py-1 rounded-full text-sm font-medium`}
                     >
                       {donor.active ? "Deactivate" : "Activate"}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteDonor(donor.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium ml-2"
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>
