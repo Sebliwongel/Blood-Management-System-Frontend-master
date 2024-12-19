@@ -1,14 +1,18 @@
 import React, { useState } from "react";
+import { createStaff } from "./../../../services/apiservice"; // Make sure this is correctly imported
 
 const StaffManagement = () => {
   const [staffList, setStaffList] = useState([
     {
       id: 1,
-      name: "John Doe",
+      firstname: "John",
+      middleName: "Doe",
+      lastName: "solomon",
+      gender: "male",
+      email: "johndoe@example.com",
       role: "Manager",
       username: "johndoe",
       password: "password123",
-      email: "johndoe@example.com",
       active: true,
     },
   ]);
@@ -21,6 +25,8 @@ const StaffManagement = () => {
     gender: "",
     email: "",
     role: "Laboratorist",
+    username: "",
+    password: "",
   });
 
   const staffRoleOptions = [
@@ -30,14 +36,6 @@ const StaffManagement = () => {
     "Manager",
   ];
 
-  const toggleStaffActiveStatus = (id) => {
-    setStaffList((prevList) =>
-      prevList.map((staff) =>
-        staff.id === id ? { ...staff, active: !staff.active } : staff
-      )
-    );
-  };
-
   const handleInputChangeStaff = (e) => {
     const { name, value } = e.target;
     setNewStaff((prev) => ({
@@ -46,19 +44,28 @@ const StaffManagement = () => {
     }));
   };
 
-  const handleFormSubmitStaff = (e) => {
+  const handleFormSubmitStaff = async (e) => {
     e.preventDefault();
+
     const newStaffMember = {
-      id: staffList.length + 1,
-      name: `${newStaff.firstName} ${newStaff.middleName} ${newStaff.lastName}`,
+      firstname: newStaff.firstName,
+      middleName: newStaff.middleName,
+      lastName: newStaff.lastName,
+      email: newStaff.email,
       role: newStaff.role,
       username: `${newStaff.firstName.toLowerCase()}${newStaff.lastName.toLowerCase()}`,
-      password: "defaultpassword",
-      email: newStaff.email,
+      password: newStaff.password || "defaultpassword", // Use a default password if not provided
       active: true,
     };
-    setStaffList([...staffList, newStaffMember]);
-    setShowCreateForm(false);
+
+    try {
+      const createdStaff = await createStaff(newStaffMember); // API call to create staff
+      setStaffList((prevList) => [...prevList, createdStaff]); // Add the newly created staff to the staff list
+      setShowCreateForm(false); // Close the form modal after successful submission
+    } catch (error) {
+      console.error("Error creating staff:", error);
+      // Optionally handle the error (e.g., show an alert or error message)
+    }
   };
 
   return (
@@ -80,7 +87,19 @@ const StaffManagement = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
+                  First Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Middle Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Last Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Gender
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Email
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Role
@@ -89,7 +108,7 @@ const StaffManagement = () => {
                   Username
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
+                  Password
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -102,10 +121,26 @@ const StaffManagement = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {staffList.map((staff) => (
                 <tr key={staff.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.username}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {staff.firstname}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {staff.middleName}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {staff.lastName}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {staff.gender}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.role}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {staff.username}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {staff.password}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -204,6 +239,32 @@ const StaffManagement = () => {
                     type="email"
                     name="email"
                     value={newStaff.email}
+                    onChange={handleInputChangeStaff}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={newStaff.username}
+                    onChange={handleInputChangeStaff}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={newStaff.password}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     required

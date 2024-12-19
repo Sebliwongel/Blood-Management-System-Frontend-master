@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { createOrder } from "../../../services/apiservice";
 const BloodRequestSection = () => {
   const [requestData, setRequestData] = useState({
     patientName: "",
@@ -21,15 +21,41 @@ const BloodRequestSection = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically make an API call to submit the request
-    setRequestData({ ...requestData, isRequestSent: true });
-  };
+    const { HospitalName, bloodTypes, unitsNeeded, question } = requestData;
+
+    // Format data to match the backend's expected structure
+    const formattedRequest = {
+      HospitalName,
+      bloodTypes,
+      unitsNeeded,
+      question,
+    };
+
+  try {
+    await createBloodRequest(formattedRequest);
+    setRequestData({
+      ...requestData,
+      isRequestSent: true,
+      successMessage: "Request sent successfully!",
+      errorMessage: "",
+    });
+  } catch (error) {
+    setRequestData({
+      ...requestData,
+      successMessage: "",
+      errorMessage: "Failed to send request. Please try again.",
+    });
+  }
+};
+
+
+
 
   const resetForm = () => {
     setRequestData({
-      patientName: "",
+      HospitalName: "",
       bloodTypes: [],
       unitsNeeded: {},
       question: "",
@@ -59,8 +85,8 @@ const BloodRequestSection = () => {
             <label className="block text-gray-700 mb-2">Hospital Name:</label>
             <input
               type="text"
-              name="patientName"
-              value={requestData.patientName}
+              name="HospitalName"
+              value={requestData.HospitalName}
               onChange={handleChange}
               className="w-full p-2 border rounded"
               required
