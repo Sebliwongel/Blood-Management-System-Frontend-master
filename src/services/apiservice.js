@@ -79,7 +79,7 @@ export const updateDonor = async (donorId, donorData) => {
   };
 
 
-  export const getHospitals = async () => {
+  export const fetchHospitals = async () => {
     try {
       const response = await api.get("/hospitals");
       return response.data;
@@ -137,17 +137,18 @@ export const deleteHospital = async (hospitalId) => {
 };
 
 
-
-// Create a new order
 export const createOrder = async (orderData) => {
   try {
-    const response = await api.post('/orders', orderData);
+    console.log("Sending Order Data:", orderData);
+    const response = await api.post("/orders", orderData);
     return response.data;
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error("Error creating order:", error.response?.data || error.message);
     throw error;
   }
 };
+
+
 
 // Fetch all orders
 export const getAllOrders = async () => {
@@ -203,4 +204,61 @@ export const createStaff = async (staffData) => {
     console.error('Error creating staff:', error);
     throw error;
   }
+};
+
+export const QualificationApiService = {
+  // Fetch all qualifications
+  async getAllQualifications() {
+    try {
+      const response = await axios.get(BASE_URL);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching qualifications:", error);
+      throw new Error(error.response?.data || "Failed to fetch qualifications.");
+    }
+  },
+
+  // Fetch a qualification by ID
+  async getQualificationById(id) {
+    try {
+      const response = await axios.get(`${BASE_URL}/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching qualification with ID ${id}:`, error);
+      throw new Error(error.response?.data || "Failed to fetch qualification.");
+    }
+  },
+
+  // Create a new qualification
+  async createQualification(qualificationData) {
+    try {
+      const response = await axios.post(BASE_URL, qualificationData);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating qualification:", error);
+      throw new Error(error.response?.data || "Failed to create qualification.");
+    }
+  },
+
+  // Update a qualification by ID
+  async updateQualification(id, updatedData) {
+    try {
+      const response = await axios.patch(`${BASE_URL}/${id}`, updatedData);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating qualification with ID ${id}:`, error);
+      throw new Error(error.response?.data || "Failed to update qualification.");
+    }
+  },
+
+  // Delete a qualification by ID
+  async deleteQualification(id) {
+    try {
+      const response = await axios.delete(`${BASE_URL}/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting qualification with ID ${id}:`, error);
+      throw new Error(error.response?.data || "Failed to delete qualification.");
+    }
+  },
 };

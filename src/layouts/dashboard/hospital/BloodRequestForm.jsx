@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { createOrder } from "../../../services/apiservice";
+import { createOrder } from "./../../../services/apiservice";
+
 const BloodRequestSection = () => {
   const [requestData, setRequestData] = useState({
-    patientName: "",
-    bloodTypes: [],
-    unitsNeeded: {},
-    question: "",
+    orderDate: "",
+    bloodTypes: [], // Array to hold selected blood types
+    quantities: {}, // Object to hold quantities for selected blood types
+    hospitalName: "", // Changed to hospitalName instead of hospitalId
+    errorMessage: "",
+    successMessage: "",
     isRequestSent: false,
   });
 
@@ -21,44 +24,56 @@ const BloodRequestSection = () => {
     }
   };
 
+  const handleQuantityChange = (bloodType, value) => {
+    setRequestData((prevData) => ({
+      ...prevData,
+      quantities: {
+        ...prevData.quantities,
+        [bloodType]: value,
+      },
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { HospitalName, bloodTypes, unitsNeeded, question } = requestData;
+    const { orderDate, bloodTypes, quantities, hospitalName } = requestData;
 
     // Format data to match the backend's expected structure
-    const formattedRequest = {
-      HospitalName,
-      bloodTypes,
-      unitsNeeded,
-      question,
-    };
+    const formattedRequest = bloodTypes.map((bloodType) => ({
+      orderDate,
+      bloodType,
+      quantity: parseInt(quantities[bloodType] || 0, 10),
+      hospitalName, // Use hospitalName instead of hospitalId
+    }));
 
-  try {
-    await createBloodRequest(formattedRequest);
-    setRequestData({
-      ...requestData,
-      isRequestSent: true,
-      successMessage: "Request sent successfully!",
-      errorMessage: "",
-    });
-  } catch (error) {
-    setRequestData({
-      ...requestData,
-      successMessage: "",
-      errorMessage: "Failed to send request. Please try again.",
-    });
-  }
-};
-
-
-
+    try {
+      await Promise.all(formattedRequest.map((order) => createOrder(order)));
+      setRequestData({
+        orderDate: "",
+        bloodTypes: [],
+        quantities: {},
+        hospitalName: "",
+        isRequestSent: true,
+        successMessage: "Request sent successfully!",
+        errorMessage: "",
+      });
+    } catch (error) {
+      setRequestData({
+        ...requestData,
+        successMessage: "",
+        errorMessage: "Failed to send request. Please try again.",
+      });
+    }
+  };
 
   const resetForm = () => {
     setRequestData({
-      HospitalName: "",
+      orderDate: "",
       bloodTypes: [],
-      unitsNeeded: {},
-      question: "",
+      quantities: {},
+      hospitalName: "",
+      errorMessage: "",
+      successMessage: "",
       isRequestSent: false,
     });
   };
@@ -82,11 +97,11 @@ const BloodRequestSection = () => {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 mb-2">Hospital Name:</label>
+            <label className="block text-gray-700 mb-2">Order Date:</label>
             <input
-              type="text"
-              name="HospitalName"
-              value={requestData.HospitalName}
+              type="date"
+              name="orderDate"
+              value={requestData.orderDate}
               onChange={handleChange}
               className="w-full p-2 border rounded"
               required
@@ -94,11 +109,30 @@ const BloodRequestSection = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-2">
-              Blood Types Needed:
-            </label>
+            <label className="block text-gray-700 mb-2">Hospital Name:</label>
+            <input
+              type="text"
+              name="hospitalName"
+              value={requestData.hospitalName}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-2">Blood Types Needed:</label>
             <div className="grid grid-cols-3 gap-4">
-              {["A+", "B+", "O+", "AB+", "O-", "A-"].map((bloodType) => (
+              {[
+                "A+",
+                "A-",
+                "B+",
+                "B-",
+                "O+",
+                "O-",
+                "AB+",
+                "AB-",
+              ].map((bloodType) => (
                 <label key={bloodType} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
@@ -124,15 +158,9 @@ const BloodRequestSection = () => {
                     <input
                       type="number"
                       min="1"
-                      value={requestData.unitsNeeded[bloodType] || ""}
+                      value={requestData.quantities[bloodType] || ""}
                       onChange={(e) =>
-                        setRequestData({
-                          ...requestData,
-                          unitsNeeded: {
-                            ...requestData.unitsNeeded,
-                            [bloodType]: e.target.value,
-                          },
-                        })
+                        handleQuantityChange(bloodType, e.target.value)
                       }
                       className="w-20 p-1 border rounded"
                       required
@@ -143,22 +171,9 @@ const BloodRequestSection = () => {
             </div>
           )}
 
-          <div>
-            <label className="block text-gray-700 mb-2">
-              Additional Notes:
-            </label>
-            <textarea
-              name="question"
-              value={requestData.question}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              rows="4"
-            />
-          </div>
-
           <button
             type="submit"
-            className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
+            className="bg-red-400 text-white px-6 py-2 rounded hover:bg-red-700"
           >
             Submit Request
           </button>
