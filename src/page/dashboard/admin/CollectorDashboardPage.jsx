@@ -57,6 +57,7 @@ import OverviewSection from "../../../layouts/dashboard/collector/OverviewSectio
 import ScheduleSection from "../../../layouts/dashboard/collector/ScheduleSection";
 import ReportsSection from "../../../layouts/dashboard/collector/ReportsSection";
 import IndividualRegistrationPage from "../../registration/individual/IndividualRegistrationPage";
+import BloodInformationForm from "../../../layouts/dashboard/collector/BloodInformationForm"; // Import BloodInformationForm
 
 function CollectorDashboardPage() {
   const navigate = useNavigate();
@@ -80,7 +81,12 @@ function CollectorDashboardPage() {
     {
       name: "registerdonor",
       displayName: "Register Donor",
-      icon: FaChartBar,
+      icon: FaUserPlus, // Updated the icon to match the register donor action
+    },
+    {
+      name: "bloodinformation",  // New section for Blood Information
+      displayName: "Blood Information",
+      icon: FaChartBar,  // You can update this icon as needed
     },
   ];
 
@@ -89,14 +95,16 @@ function CollectorDashboardPage() {
     schedule: ScheduleSection,
     reports: ReportsSection,
     registerdonor: IndividualRegistrationPage,
+    bloodinformation: BloodInformationForm,  // Add BloodInformationForm to components
   };
 
   return (
     <DashboardLayout
       sidebarItems={sidebarItems}
       components={components}
-    ></DashboardLayout>
+    />
   );
 }
 
 export default CollectorDashboardPage;
+

@@ -6,7 +6,7 @@ const BloodRequestSection = () => {
     orderDate: "",
     bloodTypes: [], // Array to hold selected blood types
     quantities: {}, // Object to hold quantities for selected blood types
-    hospitalName: "", // Changed to hospitalName instead of hospitalId
+    hospitalId: "1", // Changed to hospitalName instead of hospitalId
     errorMessage: "",
     successMessage: "",
     isRequestSent: false,
@@ -52,7 +52,7 @@ const BloodRequestSection = () => {
         orderDate: "",
         bloodTypes: [],
         quantities: {},
-        hospitalName: "",
+        hospitalId: "1",
         isRequestSent: true,
         successMessage: "Request sent successfully!",
         errorMessage: "",
@@ -71,7 +71,7 @@ const BloodRequestSection = () => {
       orderDate: "",
       bloodTypes: [],
       quantities: {},
-      hospitalName: "",
+      hospitalId: "1",
       errorMessage: "",
       successMessage: "",
       isRequestSent: false,
