@@ -1,23 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaUserCircle,
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+import { fetchHospitals, updateHospital } from "./../../../services/apiservice"; // Import API functions
 
 const HospitalProfile = () => {
-  const [hospitalInfo] = useState({
-    name: "City General Hospital",
-    email: "citygeneral@hospital.com",
-    phone: "+251-911-123456",
-    address: "Addis Ababa, Ethiopia",
-    registrationDate: "2023-01-15",
-    licenseNumber: "HSP-2023-001",
-    totalRequests: 150,
-    acceptedRequests: 120,
-    pendingRequests: 30,
-  });
+  const [hospitalInfo, setHospitalInfo] = useState(null); // Initialize with null
+  const [loading, setLoading] = useState(true); // For loading state
+  const [error, setError] = useState(null); // For error handling
+
+  // Fetch hospital data on component mount
+  useEffect(() => {
+    const getHospitalData = async () => {
+      try {
+        const data = await fetchHospitals(); // Fetch data from API
+        setHospitalInfo(data[0]); // Assuming the API returns an array of hospitals, we use the first one
+        setLoading(false); // Set loading to false after data is fetched
+      } catch (err) {
+        setError("Error fetching hospital data."); // Set error state if API call fails
+        setLoading(false); // Set loading to false on error
+      }
+    };
+
+    getHospitalData();
+  }, []);
+
+  // Handle updating the hospital information
+  const handleUpdateHospital = async (updatedData) => {
+    try {
+      await updateHospital(hospitalInfo.id, updatedData); // Update hospital data using the API
+      setHospitalInfo((prevData) => ({
+        ...prevData,
+        ...updatedData, // Merge the updated data into the existing state
+      }));
+      alert("Hospital information updated successfully!");
+    } catch (err) {
+      setError("Error updating hospital data.");
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>; // Display loading message while data is being fetched
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Display error message if any error occurs
+  }
 
   return (
     <div className="p-6">
@@ -99,6 +130,21 @@ const HospitalProfile = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Update Button */}
+        <div className="mt-6">
+          <button
+            onClick={() =>
+              handleUpdateHospital({
+                email: "newemail@hospital.com", // Example update
+                phone: "+251-911-987654", // Example update
+              })
+            }
+            className="bg-blue-600 text-white py-2 px-4 rounded-lg"
+          >
+            Update Hospital Information
+          </button>
         </div>
       </div>
     </div>

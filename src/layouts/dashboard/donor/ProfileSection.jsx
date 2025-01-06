@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUser, FaEnvelope, FaPhone, FaDroplet } from "react-icons/fa6";
+import { fetchDonors, updateDonor } from "./../../../services/apiservice";  
 
 const ProfileSection = () => {
   const [profile, setProfile] = useState({
@@ -19,10 +20,35 @@ const ProfileSection = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState(profile);
+  const donorId = 1;  // You can dynamically set this depending on the donor you are editing
 
-  const handleSave = () => {
-    setProfile(editedProfile);
-    setIsEditing(false);
+  useEffect(() => {
+    // Fetch the donor data from the API when the component mounts
+    const fetchProfileData = async () => {
+      try {
+        const donors = await fetchDonors();
+        // Assuming you want to set the first donor's data as the profile
+        if (donors.length > 0) {
+          setProfile(donors[0]);  // Adjust this based on how the API response structure looks
+          setEditedProfile(donors[0]);  // Set the edited profile to the fetched data
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchProfileData();
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
+
+  const handleSave = async () => {
+    try {
+      // Call the updateDonor function
+      const updatedData = await updateDonor(donorId, editedProfile);
+      setProfile(updatedData); // Update the profile state with the updated data from the API
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
   return (

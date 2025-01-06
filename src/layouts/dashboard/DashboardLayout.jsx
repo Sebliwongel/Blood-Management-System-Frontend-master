@@ -5,6 +5,7 @@ import Sidebar from "../../components/common/Sidebar";
 
 const DashboardLayout = ({ sidebarItems, components }) => {
   const [activeTab, setActiveTab] = useState(sidebarItems[0]?.name || "");
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Track sidebar state
 
   const handleSidebarClick = (item) => {
     if (item.action) {
@@ -18,21 +19,33 @@ const DashboardLayout = ({ sidebarItems, components }) => {
     displayName: item.displayName || item.name,
   }));
 
+  // Toggle sidebar open/close
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <DashboardNavbar />
+      {/* Navbar */}
+      <DashboardNavbar toggleSidebar={toggleSidebar} />
+
       <div className="flex flex-1">
         {/* Sidebar */}
-        <div className="w-64 bg-white shadow-md">
+        <div
+          className={`${
+            sidebarOpen ? "w-64" : "w-16"
+          } bg-white shadow-md transition-all duration-300 ease-in-out sm:w-64 sm:block`}
+        >
           <Sidebar
             items={sidebarItemsWithDisplay}
             activeItem={activeTab}
             onItemClick={handleSidebarClick}
+            sidebarOpen={sidebarOpen}
           />
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-8 overflow-auto">
           {components[activeTab] && React.createElement(components[activeTab])}
         </div>
       </div>

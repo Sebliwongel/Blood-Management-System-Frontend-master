@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FaCalendarPlus } from "react-icons/fa6";
 import AppointmentScheduleForm from "../../../components/forms/donor/AppointmentScheduleForm";
+import { createAppointment } from "../../../services/apiservice"; // Adjust the path as necessary
 
 const AppointmentsSection = () => {
-  const [appointments] = useState([
+  const [appointments, setAppointments] = useState([
     {
       id: 1,
       date: "2024-02-20",
@@ -24,10 +25,38 @@ const AppointmentsSection = () => {
 
   const [showScheduleForm, setShowScheduleForm] = useState(false);
 
-  const handleSchedule = (formData) => {
-    // Handle appointment scheduling logic here
+  const handleSchedule = async (formData) => {
     console.log("New appointment:", formData);
-    setShowScheduleForm(false);
+
+    try {
+      // Use the API service to create a new appointment
+      const newAppointment = await createAppointment({
+        appointmentDate: formData.date, // Validate with NewAppointmentSchema
+        appointmentTime: formData.time, // Validate time format (e.g., HH:mm)
+        location: formData.location,
+        status: "Pending", // Default status for new appointments
+        type: formData.type,
+        donorId: formData.donorId, // Ensure donorId is included
+      });
+
+      // Update the local state to include the new appointment
+      setAppointments((prevAppointments) => [
+        ...prevAppointments,
+        {
+          id: newAppointment.id,
+          date: newAppointment.appointmentDate,
+          time: newAppointment.appointmentTime,
+          location: newAppointment.location,
+          status: newAppointment.status,
+          type: newAppointment.type,
+        },
+      ]);
+
+      // Close the schedule form
+      setShowScheduleForm(false);
+    } catch (error) {
+      console.error("Error scheduling appointment:", error);
+    }
   };
 
   return (

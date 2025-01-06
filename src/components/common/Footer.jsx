@@ -10,7 +10,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+    <footer className="bg-gradient-to-r from-red-500 to-red-600 text-white sm:text-center" >
       {/* Top Section */}
       <div className="container mx-auto px-20 py-12 grid md:grid-cols-3 gap-8">
         {/* Logo and Description */}
@@ -83,7 +83,7 @@ const Footer = () => {
 
       {/* Bottom Section */}
       <div className="bg-red-700 py-6 px-20">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center " >
           <div className="flex items-center space-x-3">
             <img src={logo} alt="Logo" className="h-10" />
             <p className="text-lg font-semibold">

@@ -78,14 +78,15 @@ function DashboardPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <DashboardNavbar />
-      <div className="p-8">
+      <div className="p-4 md:p-8">
+        {/* Page Title */}
         <h1 className="text-2xl font-semibold mb-8">Blood Bank Dashboard</h1>
 
         {/* Blood Inventory Section */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Blood Inventory</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {bloodInventory.map((item) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+ {bloodInventory.map((item) => (
               <div
                 key={item.type}
                 className="bg-white p-4 rounded-lg shadow-sm"

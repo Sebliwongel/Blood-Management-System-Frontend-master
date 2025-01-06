@@ -25,6 +25,14 @@ export const donorLogin = async (email, password) => {
     throw error.response ? error.response.data : new Error('Login failed');
   }
 };
+export const userLogin = async (email, password) => {
+  try {
+    const response = await api.post('/user/login', { email, password });
+    return response.data; // Contains token and user details
+  } catch (error) {
+    throw error.response ? error.response.data : new Error('Login failed');
+  }
+};
 
 export const fetchDonors = async () => {
   try {
@@ -261,4 +269,120 @@ export const QualificationApiService = {
       throw new Error(error.response?.data || "Failed to delete qualification.");
     }
   },
+};
+
+// Get all appointments
+export const getAllAppointments = async () => {
+  try {
+    const response = await api.get('/appointments');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching all appointments:', error);
+    throw error;
+  }
+};
+
+// Get a single appointment by ID
+export const getAppointmentById = async (id) => {
+  try {
+    const response = await api.get(`/appointments/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching appointment with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Create a new appointment
+export const createAppointment = async (appointmentData) => {
+  try {
+    const response = await api.post('/appointments', appointmentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating donor:', error);
+    throw error;
+  }
+};
+// Update an existing appointment by ID
+export const updateAppointment = async (id, appointmentData) => {
+  try {
+    const response = await api.patch(`/appointments/${id}`, appointmentData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating appointment with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+// Optionally, add the delete function if needed in the future
+// Delete an appointment by ID
+export const deleteAppointment = async (id) => {
+  try {
+    const response = await api.delete(`/appointments/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting appointment with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+
+export const createBloodInventory = async (bloodData) => {
+  try {
+    const response = await api.post('/blood', bloodData); // Adjust this route if needed
+    return response.data;
+  } catch (error) {
+    console.error('Error creating blood inventory:', error);
+    throw error;
+  }
+};
+
+export const getAllBloodInventories = async () => {
+  try {
+    const response = await api.get('/blood');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching blood inventories:', error);
+    throw error;
+  }
+};
+
+export const getBloodInventoryById = async (id) => {
+  try {
+    const response = await api.get(`/blood/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching blood inventory with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+export const updateBloodInventory = async (id, bloodData) => {
+  try {
+    const response = await api.put(`/blood/${id}`, bloodData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating blood inventory with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+export const deleteBloodInventory = async (id) => {
+  try {
+    const response = await api.delete(`/blood/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting blood inventory with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+export const patchBloodInventory = async (id, bloodData) => {
+  try {
+    const response = await api.patch(`/blood/${id}`, bloodData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error patching blood inventory with ID ${id}:`, error);
+    throw error;
+  }
 };

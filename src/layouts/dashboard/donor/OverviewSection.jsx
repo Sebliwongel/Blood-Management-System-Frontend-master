@@ -1,37 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaDroplet, FaCalendar, FaClock, FaAward } from "react-icons/fa6";
+import axios from "axios";
 
-const OverviewSection = () => {
-  const [donorStats] = useState({
-    totalDonations: 5,
-    nextAppointment: "2024-02-20",
-    lastDonation: "2024-01-15",
-    donorLevel: "Silver",
-  });
+const OverviewSection = ({ donorId }) => {
+  const [donorStats, setDonorStats] = useState(null);
+  const [upcomingAppointment, setUpcomingAppointment] = useState(null);
+  const [recentDonations, setRecentDonations] = useState([]);
 
-  const [upcomingAppointment] = useState({
-    date: "2024-02-20",
-    time: "10:00 AM",
-    location: "Red Cross Blood Center",
-    status: "Confirmed",
-  });
+  // Fetch donor stats
+  useEffect(() => {
+    if (!donorId) return; // Prevent fetching if donorId is not available
 
-  const [recentDonations] = useState([
-    {
-      id: 1,
-      date: "2024-01-15",
-      location: "Black Lion Hospital",
-      bloodType: "A+",
-      units: 1,
-    },
-    {
-      id: 2,
-      date: "2023-12-10",
-      location: "St. Paul's Hospital",
-      bloodType: "A+",
-      units: 1,
-    },
-  ]);
+    const fetchData = async () => {
+      try {
+        // Fetch donor stats
+        const statsResponse = await axios.get(`/api/donor/${donorId}/stats`);
+        console.log("Donor Stats:", statsResponse.data);
+        setDonorStats(statsResponse.data);
+
+        // Fetch upcoming appointment
+        const appointmentResponse = await axios.get(`/api/donor/${donorId}/appointments`);
+        console.log("Upcoming Appointment:", appointmentResponse.data);
+        setUpcomingAppointment(appointmentResponse.data);
+
+        // Fetch recent donations
+        const donationsResponse = await axios.get(`/api/donor/${donorId}/recent-donations`);
+        console.log("Recent Donations:", donationsResponse.data);
+        setRecentDonations(donationsResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [donorId]);
+
+  // If data is not yet available, show loading message
+  if (!donorStats || !upcomingAppointment || !recentDonations.length) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="space-y-6">
@@ -44,9 +51,7 @@ const OverviewSection = () => {
             <FaDroplet className="text-red-500 text-2xl" />
             <div>
               <h3 className="text-gray-500 text-sm">Total Donations</h3>
-              <p className="text-2xl font-semibold">
-                {donorStats.totalDonations}
-              </p>
+              <p className="text-2xl font-semibold">{donorStats.totalDonations}</p>
             </div>
           </div>
         </div>
@@ -56,9 +61,7 @@ const OverviewSection = () => {
             <FaCalendar className="text-blue-500 text-2xl" />
             <div>
               <h3 className="text-gray-500 text-sm">Next Appointment</h3>
-              <p className="text-2xl font-semibold">
-                {donorStats.nextAppointment}
-              </p>
+              <p className="text-2xl font-semibold">{donorStats.nextAppointment}</p>
             </div>
           </div>
         </div>
@@ -68,22 +71,10 @@ const OverviewSection = () => {
             <FaClock className="text-green-500 text-2xl" />
             <div>
               <h3 className="text-gray-500 text-sm">Last Donation</h3>
-              <p className="text-2xl font-semibold">
-                {donorStats.lastDonation}
-              </p>
+              <p className="text-2xl font-semibold">{donorStats.lastDonation}</p>
             </div>
           </div>
         </div>
-
-        {/* <div className="bg-white p-6 rounded-lg shadow-sm">
-          <div className="flex items-center space-x-3">
-            <FaAward className="text-yellow-500 text-2xl" />
-            <div>
-              <h3 className="text-gray-500 text-sm">Donor Level</h3>
-              <p className="text-2xl font-semibold">{donorStats.donorLevel}</p>
-            </div>
-          </div>
-        </div> */}
       </div>
 
       {/* Upcoming Appointment */}
@@ -122,35 +113,19 @@ const OverviewSection = () => {
           <table className="min-w-full">
             <thead>
               <tr className="bg-gray-50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Location
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Blood Type
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Units
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Blood Type</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Units</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {recentDonations.map((donation) => (
                 <tr key={donation.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {donation.date}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {donation.location}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {donation.bloodType}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {donation.units}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{donation.date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{donation.location}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{donation.bloodType}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{donation.units}</td>
                 </tr>
               ))}
             </tbody>

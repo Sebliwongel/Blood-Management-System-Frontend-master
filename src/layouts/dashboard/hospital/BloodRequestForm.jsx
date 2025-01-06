@@ -6,7 +6,7 @@ const BloodRequestSection = () => {
     orderDate: "",
     bloodTypes: [], // Array to hold selected blood types
     quantities: {}, // Object to hold quantities for selected blood types
-    hospitalId: "1", // Changed to hospitalName instead of hospitalId
+    hospitalId: "", // Changed to hospitalName instead of hospitalId
     errorMessage: "",
     successMessage: "",
     isRequestSent: false,
@@ -36,28 +36,32 @@ const BloodRequestSection = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderDate, bloodTypes, quantities, hospitalName } = requestData;
+    const { orderDate, bloodTypes, quantities, hospitalId } = requestData;
 
     // Format data to match the backend's expected structure
     const formattedRequest = bloodTypes.map((bloodType) => ({
       orderDate,
       bloodType,
       quantity: parseInt(quantities[bloodType] || 0, 10),
-      hospitalName, // Use hospitalName instead of hospitalId
+      hospitalId, // Use hospitalName instead of hospitalId
     }));
 
     try {
+      // Make API calls to create orders for each selected blood type
       await Promise.all(formattedRequest.map((order) => createOrder(order)));
+      
+      // Update the state after successful order submission
       setRequestData({
         orderDate: "",
         bloodTypes: [],
         quantities: {},
-        hospitalId: "1",
+        hospitalId: "",
         isRequestSent: true,
         successMessage: "Request sent successfully!",
         errorMessage: "",
       });
     } catch (error) {
+      // Handle error and update state with failure message
       setRequestData({
         ...requestData,
         successMessage: "",
@@ -71,7 +75,7 @@ const BloodRequestSection = () => {
       orderDate: "",
       bloodTypes: [],
       quantities: {},
-      hospitalId: "1",
+      hospitalId: "",
       errorMessage: "",
       successMessage: "",
       isRequestSent: false,
@@ -112,8 +116,8 @@ const BloodRequestSection = () => {
             <label className="block text-gray-700 mb-2">Hospital Name:</label>
             <input
               type="text"
-              name="hospitalName"
-              value={requestData.hospitalName}
+              name="hospitalId"
+              value={requestData.hospitalId}
               onChange={handleChange}
               className="w-full p-2 border rounded"
               required
@@ -178,6 +182,16 @@ const BloodRequestSection = () => {
             Submit Request
           </button>
         </form>
+      )}
+      {requestData.errorMessage && (
+        <div className="mt-4 text-red-500">
+          <p>{requestData.errorMessage}</p>
+        </div>
+      )}
+      {requestData.successMessage && (
+        <div className="mt-4 text-green-500">
+          <p>{requestData.successMessage}</p>
+        </div>
       )}
     </div>
   );

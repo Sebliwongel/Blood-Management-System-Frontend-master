@@ -20,6 +20,9 @@ import StoreManagerDashboardPage from "./page/dashboard/admin/StoreManagerDashbo
 import ForgotPasswordPage from"./page/login/ForgotPasswordPage.jsx";
 import ResetPasswordPage from "./page/login/ResetPasswordPage.jsx";
 import QualificationPage from "./page/registration/individual/QualificationPage.jsx";
+import UserLoginPage from "./page/userLogin/UserLoginPage.jsx";
+import UserForgotPasswordPage from "./page/userLogin/UserForgotPasswordPage.jsx";
+import UserResetPasswordPage from "./page/userLogin/UserResetPasswordPage.jsx";
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
       <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
       <Route path="/resetpassword" element={<ResetPasswordPage  />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/admin/login" element={<UserLoginPage />} />
+      <Route path="/admin/forgotpassword" element={<UserForgotPasswordPage />} />
+      <Route path="/admin/resetpassword" element={<UserResetPasswordPage  />} />
       <Route path="/awareness" element={<AwarenessPage />} />
       <Route path="/Qualification" element={<QualificationPage />} />
 
