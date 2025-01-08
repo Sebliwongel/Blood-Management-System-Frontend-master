@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { FaUser, FaEnvelope, FaPhone, FaDroplet } from "react-icons/fa6";
-import { fetchDonors, updateDonor } from "./../../../services/apiservice";  
+import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import { fetchDonors, updateDonor } from "./../../../services/apiservice"; // Adjust the import path
 
 const ProfileSection = () => {
   const [profile, setProfile] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+251912345678",
-    bloodType: "A+",
-    medicalHistory: "No chronic conditions",
-    address: "Addis Ababa, Ethiopia",
-    emergencyContact: {
-      name: "Jane Doe",
-      relationship: "Spouse",
-      phone: "+251987654321",
-    },
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    title: "",
+    birthDate: "",
+    gender: "",
+    occupation: "",
+    city: "",
+    subCity: "",
+    woreda: "",
+    kebele: "",
+    email: "",
+    phoneNumber: "",
+    username: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState(profile);
-  const donorId = 1;  // You can dynamically set this depending on the donor you are editing
+  const donorId = 1; // You can dynamically set this depending on the donor you are editing
 
   useEffect(() => {
     // Fetch the donor data from the API when the component mounts
@@ -29,8 +31,8 @@ const ProfileSection = () => {
         const donors = await fetchDonors();
         // Assuming you want to set the first donor's data as the profile
         if (donors.length > 0) {
-          setProfile(donors[0]);  // Adjust this based on how the API response structure looks
-          setEditedProfile(donors[0]);  // Set the edited profile to the fetched data
+          setProfile(donors[0]); // Adjust this based on how the API response structure looks
+          setEditedProfile(donors[0]); // Set the edited profile to the fetched data
         }
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -108,6 +110,28 @@ const ProfileSection = () => {
             </div>
 
             <div>
+              <label className="block text-gray-700 mb-2">Middle Name</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.middleName}
+                  onChange={(e) =>
+                    setEditedProfile({
+                      ...editedProfile,
+                      middleName: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <FaUser className="text-gray-400" />
+                  <p>{profile.middleName}</p>
+                </div>
+              )}
+            </div>
+
+            <div>
               <label className="block text-gray-700 mb-2">Last Name</label>
               {isEditing ? (
                 <input
@@ -149,142 +173,15 @@ const ProfileSection = () => {
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Phone</label>
+              <label className="block text-gray-700 mb-2">Phone Number</label>
               {isEditing ? (
                 <input
                   type="tel"
-                  value={editedProfile.phone}
-                  onChange={(e) =>
-                    setEditedProfile({ ...editedProfile, phone: e.target.value })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <FaPhone className="text-gray-400" />
-                  <p>{profile.phone}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Medical Information */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="font-semibold mb-4">Medical Information</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-gray-700 mb-2">Blood Type</label>
-              {isEditing ? (
-                <select
-                  value={editedProfile.bloodType}
+                  value={editedProfile.phoneNumber}
                   onChange={(e) =>
                     setEditedProfile({
                       ...editedProfile,
-                      bloodType: e.target.value,
-                    })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                >
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
-                </select>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <FaDroplet className="text-red-500" />
-                  <p>{profile.bloodType}</p>
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-gray-700 mb-2">Medical History</label>
-              {isEditing ? (
-                <textarea
-                  value={editedProfile.medicalHistory}
-                  onChange={(e) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      medicalHistory: e.target.value,
-                    })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                  rows="3"
-                />
-              ) : (
-                <p className="text-gray-600">{profile.medicalHistory}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Emergency Contact */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="font-semibold mb-4">Emergency Contact</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-gray-700 mb-2">Name</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editedProfile.emergencyContact.name}
-                  onChange={(e) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      emergencyContact: {
-                        ...editedProfile.emergencyContact,
-                        name: e.target.value,
-                      },
-                    })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              ) : (
-                <p>{profile.emergencyContact.name}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-gray-700 mb-2">Relationship</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editedProfile.emergencyContact.relationship}
-                  onChange={(e) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      emergencyContact: {
-                        ...editedProfile.emergencyContact,
-                        relationship: e.target.value,
-                      },
-                    })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              ) : (
-                <p>{profile.emergencyContact.relationship}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-gray-700 mb-2">Phone</label>
-              {isEditing ? (
-                <input
-                  type="tel"
-                  value={editedProfile.emergencyContact.phone}
-                  onChange={(e) =>
-                    setEditedProfile({
-                      ...editedProfile,
-                      emergencyContact: {
-                        ...editedProfile.emergencyContact,
-                        phone: e.target.value,
-                      },
+                      phoneNumber: e.target.value,
                     })
                   }
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -292,8 +189,27 @@ const ProfileSection = () => {
               ) : (
                 <div className="flex items-center space-x-2">
                   <FaPhone className="text-gray-400" />
-                  <p>{profile.emergencyContact.phone}</p>
+                  <p>{profile.phoneNumber}</p>
                 </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2">Username</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.username}
+                  onChange={(e) =>
+                    setEditedProfile({
+                      ...editedProfile,
+                      username: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              ) : (
+                <p>{profile.username}</p>
               )}
             </div>
           </div>
@@ -301,20 +217,83 @@ const ProfileSection = () => {
 
         {/* Address Information */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="font-semibold mb-4">Address</h3>
-          <div>
-            {isEditing ? (
-              <textarea
-                value={editedProfile.address}
-                onChange={(e) =>
-                  setEditedProfile({ ...editedProfile, address: e.target.value })
-                }
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-                rows="3"
-              />
-            ) : (
-              <p className="text-gray-600">{profile.address}</p>
-            )}
+          <h3 className="font-semibold mb-4">Address Information</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-gray-700 mb-2">City</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.city}
+                  onChange={(e) =>
+                    setEditedProfile({
+                      ...editedProfile,
+                      city: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              ) : (
+                <p>{profile.city}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2">SubCity</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.subCity}
+                  onChange={(e) =>
+                    setEditedProfile({
+                      ...editedProfile,
+                      subCity: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              ) : (
+                <p>{profile.subCity}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2">Woreda</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.woreda}
+                  onChange={(e) =>
+                    setEditedProfile({
+                      ...editedProfile,
+                      woreda: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              ) : (
+                <p>{profile.woreda}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2">Kebele</label>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedProfile.kebele}
+                  onChange={(e) =>
+                    setEditedProfile({
+                      ...editedProfile,
+                      kebele: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              ) : (
+                <p>{profile.kebele}</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -23,6 +23,9 @@ import QualificationPage from "./page/registration/individual/QualificationPage.
 import UserLoginPage from "./page/userLogin/UserLoginPage.jsx";
 import UserForgotPasswordPage from "./page/userLogin/UserForgotPasswordPage.jsx";
 import UserResetPasswordPage from "./page/userLogin/UserResetPasswordPage.jsx";
+import HospitalLoginPage from "./page/hospitalLogin/HospitalLoginPage.jsx";
+import HospitalForgotPasswordPage from "./page/hospitalLogin/HospitalForgotPasswordPage.jsx";
+import HospitalResetPasswordPage from "./page/hospitalLogin/HospitalResetPasswordPage.jsx";
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
       <Route path="/admin/login" element={<UserLoginPage />} />
       <Route path="/admin/forgotpassword" element={<UserForgotPasswordPage />} />
       <Route path="/admin/resetpassword" element={<UserResetPasswordPage  />} />
+      <Route path="/Hospital/login" element={<HospitalLoginPage />} />
+      <Route path="/Hospital/forgotpassword" element={<HospitalForgotPasswordPage />} />
+      <Route path="/Hospital/resetpassword" element={<HospitalResetPasswordPage  />} />
       <Route path="/awareness" element={<AwarenessPage />} />
       <Route path="/Qualification" element={<QualificationPage />} />
 

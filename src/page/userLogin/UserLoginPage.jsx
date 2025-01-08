@@ -1,111 +1,8 @@
-// import React from "react";
-// import { Link } from "react-router-dom";
-// import NavBar from "../../components/common/NavBar";
-// import { login } from "../../../services/apiService";
-
-
-// try {
-//       const { token, donor } = await login(username, password);
-      
-//       // Save token and donor details to localStorage or context
-//       localStorage.setItem("token", token);
-//       localStorage.setItem("donor", JSON.stringify(donor));
-
-//       // Redirect to dashboard or home
-//       navigate("/dashboard");
-//     } catch (err) {
-//       setError(err.error || "Login failed");
-//     }
-  
-
-
-// function LoginPage() {
-//   return (
-//     <div className="bg-gray-50 min-h-screen">
-//       <NavBar />
-
-//       {/* Login Section */}
-//       <div className="flex justify-center items-center h-screen">
-//         <form className="w-full max-w-md bg-white shadow-lg border border-red-200 rounded-lg p-8 space-y-6">
-//           {/* Title */}
-//           <h2 className="text-3xl font-bold text-center text-red-600">
-//             Log In to Your Account
-//           </h2>
-//           <p className="text-center text-gray-600">
-//             Access our platform to save lives and manage blood bank operations.
-//           </p>
-
-//           {/* Username Input */}
-//           <div className="flex flex-col">
-//             <label htmlFor="username" className="text-gray-700 font-semibold">
-//               Username
-//             </label>
-//             <input
-//               type="text"
-//               name="username"
-//               id="username"
-//               placeholder="Enter your username"
-//               required
-//               className="p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-//             />
-//           </div>
-
-//           {/* Password Input */}
-//           <div className="flex flex-col">
-//             <label htmlFor="password" className="text-gray-700 font-semibold">
-//               Password
-//             </label>
-//             <input
-//               type="password"
-//               name="password"
-//               id="password"
-//               placeholder="Enter your password"
-//               required
-//               className="p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
-//             />
-//           </div>
-
-//           {/* Submit Button */}
-//           <button
-//             type="submit"
-//             className="w-full bg-red-600 text-white py-3 rounded-md font-bold text-lg hover:bg-red-700 transition duration-300"
-//           >
-//             Log In
-//           </button>
-
-//           {/* Additional Links */}
-//           <div className="text-center text-sm text-gray-600 mt-4">
-//             <p>
-//               Don't have an account?{" "}
-//               <Link
-//                 to="/registration"
-//                 className="text-red-500 font-semibold hover:underline"
-//               >
-//                 Sign Up
-//               </Link>
-//             </p>
-//             <p>
-//               Forgot your password?{" "}
-//               <Link
-//                 to="/reset-password"
-//                 className="text-red-500 font-semibold hover:underline"
-//               >
-//                 Reset it here
-//               </Link>
-//             </p>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default LoginPage;
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import NavBar from "../../components/common/NavBar";
 import { userLogin } from "../../services/apiservice";
+import { jwtDecode } from "jwt-decode";
 
 function UserLoginPage() {
   const [email, setEmail] = useState("");
@@ -120,16 +17,39 @@ function UserLoginPage() {
       // Replace with your login API call
       const apiResponse = await userLogin(email, password);
 
-      console.log(apiResponses)
-      // Save token and donor details to localStorage or context
-      // localStorage.setItem("token", token);s
+      // Save token to localStorage
+      const token = apiResponse.user.accessToken;
+      localStorage.setItem("token", token);
 
-      // Redirect to dashboard or home
-      navigate("/dashboard/donor");
+      // Decode token to get user details
+      const decodedToken = jwtDecode(token);
+      const userRole = decodedToken.role;
+
+      console.log("Decoded Token:", decodedToken);
+      console.log("User: ", userRole);
+
+      // Redirect based on user role
+      if (userRole === "COLLECTOR") {
+        navigate("/dashboard/collector");
+      } else if (userRole === "SYSTEM_ADMIN") {
+        navigate("/dashboard/system-admin");
+      } else if (userRole === "MANAGER") {
+        navigate("/dashboard/manager");
+      } else if (userRole === "STORE_MANAGER") {
+        navigate("/dashboard/store-manager");
+      } else if (userRole === "LABORATORY") {
+        navigate("/dashboard/laboratory");
+      } else {
+        console.error("Unknown role:", userRole);
+        setError("Invalid user role");
+      }
     } catch (err) {
+      console.error(err); // Optional: Log the error
       setError(err.error || "Login failed");
     }
   };
+
+  
 
   return (
     <div className="bg-gray-50 min-h-screen">

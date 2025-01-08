@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { createStaff } from "./../../../services/apiservice"; // Make sure this is correctly imported
+import { createStaff } from "./../../../services/apiservice"; // Ensure this is correctly imported
 
 const StaffManagement = () => {
   const [staffList, setStaffList] = useState([
     {
       id: 1,
       firstname: "John",
-      middleName: "Doe",
-      lastName: "solomon",
-      gender: "male",
+      middlename: "Doe",
+      lastname: "Solomon",
+      gender: "Male",
       email: "johndoe@example.com",
       role: "Manager",
       username: "johndoe",
@@ -19,9 +19,9 @@ const StaffManagement = () => {
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newStaff, setNewStaff] = useState({
-    firstName: "",
-    middleName: "",
-    lastName: "",
+    firstname: "",
+    middlename: "",
+    lastname: "",
     gender: "",
     email: "",
     role: "Laboratorist",
@@ -48,23 +48,19 @@ const StaffManagement = () => {
     e.preventDefault();
 
     const newStaffMember = {
-      firstname: newStaff.firstName,
-      middleName: newStaff.middleName,
-      lastName: newStaff.lastName,
-      email: newStaff.email,
-      role: newStaff.role,
-      username: `${newStaff.firstName.toLowerCase()}${newStaff.lastName.toLowerCase()}`,
-      password: newStaff.password || "defaultpassword", // Use a default password if not provided
+      ...newStaff,
+      username: `${newStaff.firstname.toLowerCase()}${newStaff.lastname.toLowerCase()}`,
+      password: newStaff.password || "defaultpassword", // Use default password if not provided
       active: true,
     };
 
     try {
       const createdStaff = await createStaff(newStaffMember); // API call to create staff
-      setStaffList((prevList) => [...prevList, createdStaff]); // Add the newly created staff to the staff list
-      setShowCreateForm(false); // Close the form modal after successful submission
+      setStaffList((prevList) => [...prevList, createdStaff]); // Add the newly created staff to the list
+      setShowCreateForm(false); // Close the form modal
     } catch (error) {
       console.error("Error creating staff:", error);
-      // Optionally handle the error (e.g., show an alert or error message)
+      // Optionally handle error (e.g., show an alert or error message)
     }
   };
 
@@ -125,14 +121,12 @@ const StaffManagement = () => {
                     {staff.firstname}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.middleName}
+                    {staff.middlename}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.lastName}
+                    {staff.lastname}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.gender}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.gender}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.role}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -154,7 +148,6 @@ const StaffManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
-                      onClick={() => toggleStaffActiveStatus(staff.id)}
                       className={`${
                         staff.active
                           ? "bg-red-100 text-red-600 hover:bg-red-200"
@@ -184,8 +177,8 @@ const StaffManagement = () => {
                   </label>
                   <input
                     type="text"
-                    name="firstName"
-                    value={newStaff.firstName}
+                    name="FirstName"
+                    value={newStaff.FirstName}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     required
@@ -197,8 +190,8 @@ const StaffManagement = () => {
                   </label>
                   <input
                     type="text"
-                    name="middleName"
-                    value={newStaff.middleName}
+                    name="middlename"
+                    value={newStaff.middlename}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   />
@@ -209,8 +202,8 @@ const StaffManagement = () => {
                   </label>
                   <input
                     type="text"
-                    name="lastName"
-                    value={newStaff.lastName}
+                    name="lastname"
+                    value={newStaff.lastname}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     required

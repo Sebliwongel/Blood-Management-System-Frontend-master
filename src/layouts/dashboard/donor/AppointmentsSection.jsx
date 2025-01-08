@@ -11,7 +11,7 @@ const AppointmentsSection = () => {
       time: "10:00 AM",
       location: "Red Cross Blood Center",
       status: "Confirmed",
-      type: "Blood Donation",
+      // type: "Blood Donation",
     },
     {
       id: 2,
@@ -19,7 +19,7 @@ const AppointmentsSection = () => {
       time: "2:30 PM",
       location: "St. Paul's Hospital",
       status: "Pending",
-      type: "Blood Donation",
+      // type: "Blood Donation",
     },
   ]);
 
@@ -35,7 +35,7 @@ const AppointmentsSection = () => {
         appointmentTime: formData.time, // Validate time format (e.g., HH:mm)
         location: formData.location,
         status: "Pending", // Default status for new appointments
-        type: formData.type,
+        // type: formData.type,
         donorId: formData.donorId, // Ensure donorId is included
       });
 
@@ -48,7 +48,7 @@ const AppointmentsSection = () => {
           time: newAppointment.appointmentTime,
           location: newAppointment.location,
           status: newAppointment.status,
-          type: newAppointment.type,
+          // type: newAppointment.type,
         },
       ]);
 

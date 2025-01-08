@@ -193,7 +193,7 @@ function IndividualRegistrationPage() {
       {/* Header Section */}
       <div className="container mx-auto px-4 pt-28 text-center">
         <h1 className="text-3xl font-semibold mb-4">
-          Welcome to Blood and Tissue Supply Chain Management System
+          Welcome to Donor Registration Form
         </h1>
         <p className="text-gray-600 mb-8">
           Please complete all the required information to register as a donor

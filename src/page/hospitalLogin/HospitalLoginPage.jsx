@@ -1,15 +1,10 @@
 
-  
-
-
-
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import NavBar from "../../components/common/NavBar";
-import { donorLogin } from "../../services/apiservice";
+import {HospitalLogin  } from "../../services/apiservice";
 
-function LoginPage() {
+function HospitalLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,14 +15,14 @@ function LoginPage() {
 
     try {
       // Replace with your login API call
-      const { token, donor } = await donorLogin(email, password);
+      const { token, Hospital} = await HospitalLogin (email, password);
 
       // Save token and donor details to localStorage or context
       localStorage.setItem("token", token);
-      localStorage.setItem("donor", JSON.stringify(donor));
+      localStorage.setItem("Hospital", JSON.stringify(Hospital));
 
       // Redirect to dashboard or home
-      navigate("/dashboard/donor");
+      navigate("/dashboard/hospital");
     } catch (err) {
       setError(err.error || "Login failed");
     }
@@ -99,6 +94,6 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default HospitalLoginPage;
 
 

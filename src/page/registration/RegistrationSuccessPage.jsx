@@ -36,7 +36,7 @@ function RegistrationSuccessPage({ isHospital }) {
           <p className="text-gray-600 mb-8">{message}</p>
           <div className="space-x-4">
             <Link
-              to="/login"
+              to="/Hospital/login"
               className="inline-block px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Login

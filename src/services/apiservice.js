@@ -19,7 +19,7 @@ api.interceptors.request.use(
 
 export const donorLogin = async (email, password) => {
   try {
-    const response = await apiClient.post('/donor/login', { email, password });
+    const response = await apiClient.post('/auth/donor/login', { email, password });
     return response.data; // Contains token and user details
   } catch (error) {
     throw error.response ? error.response.data : new Error('Login failed');
@@ -27,7 +27,16 @@ export const donorLogin = async (email, password) => {
 };
 export const userLogin = async (email, password) => {
   try {
-    const response = await api.post('/user/login', { email, password });
+    const response = await api.post('/auth/user/login', { email, password });
+    return response.data; // Contains token and user details
+  } catch (error) {
+    throw error.response ? error.response.data : new Error('Login failed');
+  }
+};
+
+export const HospitalLogin = async (email, password) => {
+  try {
+    const response = await api.post('/auth/Hospital/login', { email, password });
     return response.data; // Contains token and user details
   } catch (error) {
     throw error.response ? error.response.data : new Error('Login failed');
