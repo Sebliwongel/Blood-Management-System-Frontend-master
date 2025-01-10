@@ -2,14 +2,29 @@ import React from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../../components/common/NavBar";
 
-function RegistrationSuccessPage({ isHospital }) {
-  const title = isHospital
-    ? "Hospital Registration Successful!"
-    : "Individual Donor Registration Successful!";
+function RegistrationSuccessPage({ userType }) {
+  let title, message, loginLink;
 
-  const message = isHospital
-    ? "Your hospital has been successfully registered. You can now log in to access your dashboard."
-    : "Thank you for registering as an individual blood donor. Your contribution can help save lives.";
+  switch (userType) {
+    case "hospital":
+      title = "Hospital Registration Successful!";
+      message =
+        "Your hospital has been successfully registered. You can now log in to access your dashboard.";
+      loginLink = "/Hospital/login";
+      break;
+    case "staff":
+      title = "Staff Registration Successful!";
+      message =
+        "Your account has been successfully created. You can now log in to access your dashboard.";
+      loginLink = "/admin/login";
+      break;
+    default:
+      title = "Individual Donor Registration Successful!";
+      message =
+        "Thank you for registering as an individual blood donor. Your contribution can help save lives.";
+      loginLink = "/login";
+      break;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -36,7 +51,7 @@ function RegistrationSuccessPage({ isHospital }) {
           <p className="text-gray-600 mb-8">{message}</p>
           <div className="space-x-4">
             <Link
-              to="/Hospital/login"
+              to={loginLink}
               className="inline-block px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Login

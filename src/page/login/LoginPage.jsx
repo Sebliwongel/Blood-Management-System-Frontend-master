@@ -1,11 +1,5 @@
-
-  
-
-
-
-
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../../components/common/NavBar";
 import { donorLogin } from "../../services/apiservice";
 
@@ -19,17 +13,28 @@ function LoginPage() {
     e.preventDefault();
 
     try {
-      // Replace with your login API call
-      const { token, donor } = await donorLogin(email, password);
+      console.log("Attempting login with:", email, password);
+      // Pass email and password separately as arguments
+      const { token, Donor } = await donorLogin(email, password);
 
       // Save token and donor details to localStorage or context
       localStorage.setItem("token", token);
-      localStorage.setItem("donor", JSON.stringify(donor));
+      localStorage.setItem("donor", JSON.stringify(Donor));
 
       // Redirect to dashboard or home
       navigate("/dashboard/donor");
     } catch (err) {
-      setError(err.error || "Login failed");
+      // Check if the error object contains a response
+      if (err.response) {
+        // The error is from the API response
+        setError(err.response.data?.message || "Login failed");
+      } else if (err.request) {
+        // The request was made but no response received
+        setError("No response from the server. Please try again later.");
+      } else {
+        // Other errors (e.g., network errors, wrong input, etc.)
+        setError("An error occurred. Please try again.");
+      }
     }
   };
 
@@ -100,5 +105,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
-

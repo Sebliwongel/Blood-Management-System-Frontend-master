@@ -19,7 +19,7 @@ api.interceptors.request.use(
 
 export const donorLogin = async (email, password) => {
   try {
-    const response = await apiClient.post('/auth/donor/login', { email, password });
+    const response = await api.post('/auth/donor/login', { email, password });
     return response.data; // Contains token and user details
   } catch (error) {
     throw error.response ? error.response.data : new Error('Login failed');
@@ -41,7 +41,37 @@ export const HospitalLogin = async (email, password) => {
   } catch (error) {
     throw error.response ? error.response.data : new Error('Login failed');
   }
+
 };
+export const getScheduledAppointments = async () => {
+  const response = await api.get('/appointments/scheduled');
+  return response.data;
+};
+
+// services/bloodCollectionService.js
+
+export const createBloodCollection = async (data) => {
+  try {
+    const response = await fetch('/api/blood-collection', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to save blood collection data');
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error saving blood collection:', error);
+    throw error;
+  }
+};
+
 
 export const fetchDonors = async () => {
   try {
@@ -95,7 +125,26 @@ export const updateDonor = async (donorId, donorData) => {
     }
   };
 
-
+  export const getDonorByPhoneNumber = async (phoneNumber) => {
+    try {
+      const response = await api.get(`/donor/phone/${phoneNumber}`); // GET request to fetch donor by phone number
+      return response.data; // Return the response data (donor details)
+    } catch (error) {
+      console.error('Error fetching donor by phone number:', error);
+      throw error; // Throw error for handling in the calling function
+    }
+  };
+  
+  export const saveBloodInventory = async (data) => {
+    try {
+      const response = await api.post("/bloodinventory", data); // POST request to save blood inventory
+      return response.data; // Return the newly created record
+    } catch (error) {
+      console.error("Error saving blood inventory:", error);
+      throw error;
+    }
+  };
+  
   export const fetchHospitals = async () => {
     try {
       const response = await api.get("/hospitals");
@@ -219,6 +268,16 @@ export const createStaff = async (staffData) => {
     return response.data;
   } catch (error) {
     console.error('Error creating staff:', error);
+    throw error;
+  }
+};
+
+export const fetchStaff = async () => {
+  try {
+    const response = await api.get("/users");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching users:", error.response?.data || error.message);
     throw error;
   }
 };

@@ -1,8 +1,7 @@
-
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../../components/common/NavBar";
-import {HospitalLogin  } from "../../services/apiservice";
+import { HospitalLogin } from "../../services/apiservice";
 
 function HospitalLoginPage() {
   const [email, setEmail] = useState("");
@@ -14,17 +13,28 @@ function HospitalLoginPage() {
     e.preventDefault();
 
     try {
-      // Replace with your login API call
-      const { token, Hospital} = await HospitalLogin (email, password);
+      console.log("Attempting login with:", email, password);
+      // Pass email and password separately as arguments
+      const { token, hospital } = await HospitalLogin(email, password);
 
       // Save token and donor details to localStorage or context
       localStorage.setItem("token", token);
-      localStorage.setItem("Hospital", JSON.stringify(Hospital));
+      localStorage.setItem("hospital", JSON.stringify(hospital));
 
       // Redirect to dashboard or home
       navigate("/dashboard/hospital");
     } catch (err) {
-      setError(err.error || "Login failed");
+      // Check if the error object contains a response
+      if (err.response) {
+        // The error is from the API response
+        setError(err.response.data?.message || "Login failed");
+      } else if (err.request) {
+        // The request was made but no response received
+        setError("No response from the server. Please try again later.");
+      } else {
+        // Other errors (e.g., network errors, wrong input, etc.)
+        setError("An error occurred. Please try again.");
+      }
     }
   };
 
@@ -95,5 +105,3 @@ function HospitalLoginPage() {
 }
 
 export default HospitalLoginPage;
-
-

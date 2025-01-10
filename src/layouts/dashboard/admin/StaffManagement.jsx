@@ -1,22 +1,9 @@
-import React, { useState } from "react";
-import { createStaff } from "./../../../services/apiservice"; // Ensure this is correctly imported
+import React, { useState, useEffect } from "react";
+import { createStaff, fetchStaff } from "../../../services/apiservice"; // Import the fetchStaff API
 
 const StaffManagement = () => {
-  const [staffList, setStaffList] = useState([
-    {
-      id: 1,
-      firstname: "John",
-      middlename: "Doe",
-      lastname: "Solomon",
-      gender: "Male",
-      email: "johndoe@example.com",
-      role: "Manager",
-      username: "johndoe",
-      password: "password123",
-      active: true,
-    },
-  ]);
-
+  const [staffList, setStaffList] = useState([]);
+  const [loading, setLoading] = useState(true); // For loading state
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newStaff, setNewStaff] = useState({
     firstname: "",
@@ -35,6 +22,22 @@ const StaffManagement = () => {
     "Collector",
     "Manager",
   ];
+
+  useEffect(() => {
+    // Fetch staff data on component mount
+    const fetchStaffData = async () => {
+      try {
+        const staff = await fetchStaff(); // Fetching staff data using the API service
+        setStaffList(staff); // Set the staff list with fetched data
+      } catch (error) {
+        console.error("Error fetching staff:", error);
+      } finally {
+        setLoading(false); // Hide loading state after data is fetched
+      }
+    };
+
+    fetchStaffData();
+  }, []);
 
   const handleInputChangeStaff = (e) => {
     const { name, value } = e.target;
@@ -60,9 +63,12 @@ const StaffManagement = () => {
       setShowCreateForm(false); // Close the form modal
     } catch (error) {
       console.error("Error creating staff:", error);
-      // Optionally handle error (e.g., show an alert or error message)
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading state while fetching data
+  }
 
   return (
     <div className="space-y-6">
@@ -117,24 +123,14 @@ const StaffManagement = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {staffList.map((staff) => (
                 <tr key={staff.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.firstname}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.middlename}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.lastname}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.firstname}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.middlename}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.lastname}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.gender}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.username}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {staff.password}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.username}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.password}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -177,8 +173,8 @@ const StaffManagement = () => {
                   </label>
                   <input
                     type="text"
-                    name="FirstName"
-                    value={newStaff.FirstName}
+                    name="firstname"
+                    value={newStaff.firstname}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     required
@@ -285,15 +281,15 @@ const StaffManagement = () => {
                 <button
                   type="button"
                   onClick={() => setShowCreateForm(false)}
-                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200"
+                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                  className="bg-blue-500 text-white px-6 py-2 rounded-md"
                 >
-                  Create Staff
+                  Create
                 </button>
               </div>
             </form>

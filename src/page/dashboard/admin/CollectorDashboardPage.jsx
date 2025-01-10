@@ -54,11 +54,12 @@ import { HiOutlineViewGrid } from "react-icons/hi";
 import { FaCalendarAlt, FaChartBar, FaUserPlus } from "react-icons/fa";
 import DashboardLayout from "../../../layouts/dashboard/DashboardLayout";
 import OverviewSection from "../../../layouts/dashboard/collector/OverviewSection";
-import ScheduleSection from "../../../layouts/dashboard/collector/ScheduleSection";
+//import ScheduleSection from "../../../layouts/dashboard/collector/ScheduleSection";
 import ReportsSection from "../../../layouts/dashboard/collector/ReportsSection";
 import IndividualRegistrationPage from "../../registration/individual/IndividualRegistrationPage";
 import BloodInformationForm from "../../../layouts/dashboard/collector/BloodInformationForm"; // Import BloodInformationForm
-
+import BloodCollectionSection from "../../../layouts/dashboard/collector/BloodCollectionSection"; 
+import PreDonationScreeningSection from "../../../layouts/dashboard/collector/PreDonationScreeningSection"; 
 function CollectorDashboardPage() {
   const navigate = useNavigate();
 
@@ -68,11 +69,11 @@ function CollectorDashboardPage() {
       displayName: "Overview",
       icon: HiOutlineViewGrid,
     },
-    {
-      name: "schedule",
-      displayName: "Collection Schedule",
-      icon: FaCalendarAlt,
-    },
+    // {
+    //   name: "schedule",
+    //   displayName: "Collection Schedule",
+    //   icon: FaCalendarAlt,
+    // },
     {
       name: "reports",
       displayName: "Reports",
@@ -88,14 +89,28 @@ function CollectorDashboardPage() {
       displayName: "Blood Information",
       icon: FaChartBar,  // You can update this icon as needed
     },
+    {
+      name: "predonation",
+      displayName: "Pre-Donation Screening",
+      icon: FaChartBar, // Icon for pre-donation
+    },
+    {
+      name: "bloodcollection",
+      displayName: "Blood Collection",
+      icon: FaUserPlus, // Icon for blood collection
+    },
   ];
+
+ 
 
   const components = {
     overview: OverviewSection,
-    schedule: ScheduleSection,
+    //schedule: ScheduleSection,
     reports: ReportsSection,
     registerdonor: IndividualRegistrationPage,
     bloodinformation: BloodInformationForm,  // Add BloodInformationForm to components
+    PreDonation:PreDonationScreeningSection,
+    BloodCollection:BloodCollectionSection
   };
 
   return (

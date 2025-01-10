@@ -29,7 +29,7 @@ const BloodRequestSection = () => {
     // Decode token to get user details
     const decodedToken = jwtDecode(token);
     let hospitalId = decodedToken.id;
-    hospitalId = 1; // Todo: Remove After hospital registration 
+     
 
     const {
       aPosAmount,
