@@ -1,4 +1,3 @@
-import React from "react";
 import { FaBell, FaClipboardList } from "react-icons/fa";
 import NotificationsSection from "../../../layouts/dashboard/laboratory/NotificationsSection";
 import ReportSection from "../../../layouts/dashboard/laboratory/ReportSection";

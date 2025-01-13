@@ -137,7 +137,7 @@ export const updateDonor = async (donorId, donorData) => {
   
   export const saveBloodInventory = async (data) => {
     try {
-      const response = await api.post("/bloodinventory", data); // POST request to save blood inventory
+      const response = await api.post("/blood", data); // POST request to save blood inventory
       return response.data; // Return the newly created record
     } catch (error) {
       console.error("Error saving blood inventory:", error);

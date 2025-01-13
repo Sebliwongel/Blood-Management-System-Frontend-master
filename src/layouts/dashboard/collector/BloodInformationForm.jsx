@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { saveBloodInventory, getDonorByPhoneNumber } from "../../../services/apiservice";
 
@@ -38,10 +39,17 @@ function BloodInformationForm() {
     const payload = {
       donorId: donorInfo.id,
       donationDate: formData.donationDate,
+      //expirationDate: formData.donationDate,
+      //storageStatus: "AVAILABLE",
       barcode: formData.barcode,
       bloodVolume: formData.bloodVolume,
+      //bloodType: "O_POS",
+      quantityml: 500,
+      //stockLevel: 1,
+      //hospitalId: 1,
+      collectorId: 1
     };
-
+    //TODO: decode collector from from token
     try {
       // Save blood inventory using the imported function
       const newRecord = await saveBloodInventory(payload);
@@ -97,10 +105,10 @@ function BloodInformationForm() {
         <div style={{ marginBottom: "20px" }}>
           <h4>Donor Found:</h4>
           <p>
-            <strong>Name:</strong> {donorInfo.name}
+            <strong>Name:</strong> {donorInfo.firstName} {donorInfo.lastName}
           </p>
           <p>
-            <strong>Phone:</strong> {donorInfo.phone}
+            <strong>Phone:</strong> {donorInfo.PhoneNumber}
           </p>
           <p>
             <strong>Blood Type:</strong> {donorInfo.bloodType}

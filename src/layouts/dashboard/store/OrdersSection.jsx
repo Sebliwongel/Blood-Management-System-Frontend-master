@@ -1,47 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAllOrders } from "./../../../services/apiservice";
+// import api from './api'; // Assuming the API function is in a separate file
+
+// Function to get an order by ID
+
 
 const OrdersSection = () => {
-  const [orders] = useState([
-    {
-      hospitalName: "City Hospital",
-      bloodType: "A+",
-      unitsRequested: 10,
-      orderDate: "2024-11-18",
-      status: "Pending",
-    },
-    {
-      hospitalName: "General Hospital",
-      bloodType: "B+",
-      unitsRequested: 5,
-      orderDate: "2024-11-19",
-      status: "Approved",
-    },
-    {
-      hospitalName: "County Hospital",
-      bloodType: "O-",
-      unitsRequested: 20,
-      orderDate: "2024-11-20",
-      status: "Processing",
-    },
-    {
-      hospitalName: "St. Mary's Hospital",
-      bloodType: "AB+",
-      unitsRequested: 15,
-      orderDate: "2024-11-21",
-      status: "Delivered",
-    },
-    {
-      hospitalName: "Children's Hospital",
-      bloodType: "A-",
-      unitsRequested: 8,
-      orderDate: "2024-11-22",
-      status: "Pending",
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // UseEffect hook to fetch orders (for demonstration, using a sample list of order IDs)
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        // Here, you would normally fetch an array of order IDs and then fetch details for each one
+        // For the sake of example, let's assume you have these order IDs
+        //const orderIds = [1, 2, 3, 4, 5]; // Example order IDs, replace with real data if needed
+        
+        const fetchedOrders = await getAllOrders();
+
+        setOrders(fetchedOrders);
+      } catch (err) {
+        setError('Failed to fetch orders');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []); // Empty array ensures this effect runs once when the component mounts
 
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-semibold">Blood Orders</h2>
+
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
 
       <div className="bg-white rounded-lg shadow-sm">
         <div className="overflow-x-auto">
@@ -52,10 +47,28 @@ const OrdersSection = () => {
                   Hospital Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Blood Type
+                  A-
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Units Requested
+                  A+
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  B+
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  B-
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  AB+
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  AB-
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  O+
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  O-
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Order Date
@@ -69,13 +82,25 @@ const OrdersSection = () => {
               {orders.map((order, index) => (
                 <tr key={index}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {order.hospitalName}
+                    {order.hospital.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {order.bloodType}
+                    {order.aNegAmount}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {order.unitsRequested}
+                    {order.aPosAmount}
+                  </td><td className="px-6 py-4 whitespace-nowrap">
+                    {order.bNegAmount}
+                  </td><td className="px-6 py-4 whitespace-nowrap">
+                    {order.bPosAmount}
+                  </td><td className="px-6 py-4 whitespace-nowrap">
+                    {order.abNegAmount}
+                  </td><td className="px-6 py-4 whitespace-nowrap">
+                    {order.abPosAmount}
+                  </td><td className="px-6 py-4 whitespace-nowrap">
+                    {order.oNegAmount}
+                  </td><td className="px-6 py-4 whitespace-nowrap">
+                    {order.oPosAmount}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {order.orderDate}

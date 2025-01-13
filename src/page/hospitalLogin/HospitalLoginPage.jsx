@@ -15,11 +15,14 @@ function HospitalLoginPage() {
     try {
       console.log("Attempting login with:", email, password);
       // Pass email and password separately as arguments
-      const { token, hospital } = await HospitalLogin(email, password);
+      const result = await HospitalLogin(email, password);
 
       // Save token and donor details to localStorage or context
-      localStorage.setItem("token", token);
-      localStorage.setItem("hospital", JSON.stringify(hospital));
+      localStorage.setItem("token", result.Hospital.accessToken);
+      localStorage.setItem("hospital", JSON.stringify(result.Hospital));
+
+      console.log(localStorage.getItem('token'));
+      
 
       // Redirect to dashboard or home
       navigate("/dashboard/hospital");

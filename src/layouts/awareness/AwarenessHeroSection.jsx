@@ -1,4 +1,3 @@
-import React from "react";
 import BloodHeart from "../../assets/img/awareness.picture.jpg";
 
 function AwarenessHeroSection() {
@@ -17,7 +16,7 @@ function AwarenessHeroSection() {
             sleeve and be a hero.
           </p>
           <a
-            href="#"
+            href="Qualification"
             className="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
             Donate

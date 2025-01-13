@@ -1,56 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAllBloodInventories } from "./../../../services/apiservice";
 
 const InventorySection = () => {
   const [inventory, setInventory] = useState([
-    {
-      bloodType: "A+",
-      stockLevel: 30,
-      expirationDate: "2024-12-15",
-      barcode: "12345",
-    },
-    {
-      bloodType: "B+",
-      stockLevel: 45,
-      expirationDate: "2024-12-18",
-      barcode: "12346",
-    },
-    {
-      bloodType: "AB+",
-      stockLevel: 20,
-      expirationDate: "2024-12-10",
-      barcode: "12347",
-    },
-    {
-      bloodType: "O+",
-      stockLevel: 50,
-      expirationDate: "2024-12-20",
-      barcode: "12348",
-    },
-    {
-      bloodType: "A-",
-      stockLevel: 25,
-      expirationDate: "2024-12-22",
-      barcode: "12349",
-    },
-    {
-      bloodType: "B-",
-      stockLevel: 15,
-      expirationDate: "2024-12-25",
-      barcode: "12350",
-    },
-    {
-      bloodType: "AB-",
-      stockLevel: 10,
-      expirationDate: "2024-12-30",
-      barcode: "12351",
-    },
-    {
-      bloodType: "O-",
-      stockLevel: 60,
-      expirationDate: "2024-12-05",
-      barcode: "12352",
-    },
+    
   ]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch blood inventories when the component mounts
+    const fetchBloodInventories = async () => {
+      try {
+        const data = await getAllBloodInventories();
+        setInventory(data);
+      } catch (err) {
+        setError('Failed to fetch blood inventories');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBloodInventories();
+  }, []);
 
   const handleIncrease = (index) => {
     const updatedInventory = [...inventory];

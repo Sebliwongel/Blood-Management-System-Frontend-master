@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { createStaff, fetchStaff } from "../../../services/apiservice"; // Import the fetchStaff API
 
@@ -6,21 +7,22 @@ const StaffManagement = () => {
   const [loading, setLoading] = useState(true); // For loading state
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newStaff, setNewStaff] = useState({
-    firstname: "",
-    middlename: "",
-    lastname: "",
-    gender: "",
+    FirstName: "",
+    MiddleName: "",
+    LastName: "",
+    Gender: "",
     email: "",
     role: "Laboratorist",
     username: "",
     password: "",
+    isActive: true
   });
 
   const staffRoleOptions = [
-    "Laboratorist",
+    "LABORATORY",
     "Store Manager",
-    "Collector",
-    "Manager",
+    "COLLECTOR",
+    "MANAGER",
   ];
 
   useEffect(() => {
@@ -52,9 +54,9 @@ const StaffManagement = () => {
 
     const newStaffMember = {
       ...newStaff,
-      username: `${newStaff.firstname.toLowerCase()}${newStaff.lastname.toLowerCase()}`,
+      //username: `${newStaff.firstname.toLowerCase()}${newStaff.lastname.toLowerCase()}`,
       password: newStaff.password || "defaultpassword", // Use default password if not provided
-      active: true,
+      // active: true,
     };
 
     try {
@@ -109,9 +111,9 @@ const StaffManagement = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Username
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Password
-                </th>
+                </th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
@@ -123,14 +125,14 @@ const StaffManagement = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {staffList.map((staff) => (
                 <tr key={staff.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.firstname}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.middlename}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.lastname}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.gender}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.FirstName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.MiddleName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.LastName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{staff.Gender}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.role}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{staff.username}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{staff.password}</td>
+                  {/* <td className="px-6 py-4 whitespace-nowrap">{staff.password}</td> */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -173,7 +175,7 @@ const StaffManagement = () => {
                   </label>
                   <input
                     type="text"
-                    name="firstname"
+                    name="FirstName"
                     value={newStaff.firstname}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -186,7 +188,7 @@ const StaffManagement = () => {
                   </label>
                   <input
                     type="text"
-                    name="middlename"
+                    name="MiddleName"
                     value={newStaff.middlename}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -198,7 +200,7 @@ const StaffManagement = () => {
                   </label>
                   <input
                     type="text"
-                    name="lastname"
+                    name="LastName"
                     value={newStaff.lastname}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -210,7 +212,7 @@ const StaffManagement = () => {
                     Gender
                   </label>
                   <select
-                    name="gender"
+                    name="Gender"
                     value={newStaff.gender}
                     onChange={handleInputChangeStaff}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"

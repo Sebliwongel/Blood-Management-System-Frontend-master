@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createOrder } from "./../../../services/apiservice";
+import { jwtDecode } from "jwt-decode";
 
 const BloodRequestSection = () => {
   const [requestData, setRequestData] = useState({
@@ -25,10 +26,13 @@ const BloodRequestSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.setItem("token", token);
+    const token = localStorage.getItem("token");
+    console.log(token);
+    
     // Decode token to get user details
     const decodedToken = jwtDecode(token);
     let hospitalId = decodedToken.id;
+    // let hospitalId = 1;
      
 
     const {

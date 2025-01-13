@@ -1,92 +1,63 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getAllBloodInventories } from "./../../../services/apiservice";
 
-const ReportSection = () => {
-  const [donors] = useState([
-    {
-      id: 1,
-      name: "Alice Johnson",
-      bloodBarcode: "B123456",
-      collectionDate: "2024-11-18",
-      bloodType: "",
-    },
-    {
-      id: 2,
-      name: "Bob Smith",
-      bloodBarcode: "B123457",
-      collectionDate: "2024-11-19",
-      bloodType: "",
-    },
-    {
-      id: 3,
-      name: "Charlie Brown",
-      bloodBarcode: "B123458",
-      collectionDate: "2024-11-20",
-      bloodType: "",
-    },
-  ]);
+// Function to get all blood inventories
 
-  const [generatedReport, setGeneratedReport] = useState(null);
+// React component to display blood inventories
+const BloodInventoryPage = () => {
+  const [bloodInventories, setBloodInventories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleGenerateReport = () => {
-    const report = donors.map((donor) => ({
-      name: donor.name,
-      bloodBarcode: donor.bloodBarcode,
-      collectionDate: donor.collectionDate,
-      bloodType: donor.bloodType || "Not provided",
-    }));
-    setGeneratedReport(report);
-  };
+  useEffect(() => {
+    // Fetch blood inventories when the component mounts
+    const fetchBloodInventories = async () => {
+      try {
+        const data = await getAllBloodInventories();
+        setBloodInventories(data);
+      } catch (err) {
+        setError('Failed to fetch blood inventories');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSendReport = () => {
-    alert("Report sent successfully!");
-  };
+    fetchBloodInventories();
+  }, []);
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-red-500 mb-6">
-        Generated Report
-      </h2>
-      {generatedReport && (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-            <thead>
-              <tr className="bg-red-500 text-white">
-                <th className="py-2 px-4 text-left">Donor Name</th>
-                <th className="py-2 px-4 text-left">Blood Barcode</th>
-                <th className="py-2 px-4 text-left">Collection Date</th>
-                <th className="py-2 px-4 text-left">Blood Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {generatedReport.map((report, index) => (
-                <tr key={index} className="border-b border-gray-200">
-                  <td className="py-2 px-4">{report.name}</td>
-                  <td className="py-2 px-4">{report.bloodBarcode}</td>
-                  <td className="py-2 px-4">{report.collectionDate}</td>
-                  <td className="py-2 px-4">{report.bloodType}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <h1>Blood Inventories</h1>
 
-      <div className="mt-6 flex justify-between">
-        <button
-          onClick={handleGenerateReport}
-          className="bg-green-500 text-white py-2 px-6 rounded-full"
-        >
-          Generate Report
-        </button>
-        <button
-          onClick={handleSendReport}
-          className="bg-blue-500 text-white py-2 px-6 rounded-full"
-        >
-          Send Report
-        </button>
-      </div>
+      {loading && <p>Loading...</p>}
+
+      {error && <p>{error}</p>}
+
+      {!loading && !error && (
+        <table border="1" cellPadding="10">
+          <thead>
+            <tr>
+              <th>Barcode</th>
+              <th>Donation Date</th>
+              <th>Blood Type</th>
+              <th>Quantity (ml)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bloodInventories.map((inventory, index) => (
+              <tr key={index}>
+                <td>{inventory.barcode}</td>
+                <td>{inventory.donationDate}</td>
+                <td>{inventory.bloodType}</td>
+                <td>{inventory.quantityml} units</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
 
-export default ReportSection;
+
+export default BloodInventoryPage;

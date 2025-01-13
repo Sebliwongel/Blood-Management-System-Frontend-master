@@ -1,13 +1,23 @@
 import React, { useState } from "react";
-import { FaSearch, FaBars } from "react-icons/fa";
+import {  FaBars } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { FaSignOutAlt } from 'react-icons/fa'; 
+// import { useHistory } from 'react-router-dom';
 
 const DashboardNavbar = ({ toggleSidebar }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  //const history = useHistory();
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+  const handleLogout = () => {
+    // Clear localStorage
+    localStorage.clear(); // Or use localStorage.removeItem('key') if you want to remove specific items
+
+    // Redirect to home page (you can change '/home' to the desired URL path)
+   // history.push('/'); // Redirect to home page using react-router (if you are using React Router)
+    window.location.href = '/';
+    // Or, if you don't use React Router, you can use window.location:
+    // window.location.href = '/';  // Redirects to the home page
   };
+  
 
   return (
     <nav className="flex items-center justify-between bg-white shadow p-4 z-10 w-full">
@@ -17,19 +27,16 @@ const DashboardNavbar = ({ toggleSidebar }) => {
         <span className="text-lg font-semibold hidden sm:inline">Dashboard</span>
       </div>
 
-      {/* Right: Search bar */}
-      <div className="flex items-center w-full sm:w-auto justify-end">
-        <div className="relative w-full sm:w-64">
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="pl-8 pr-10 py-1 border border-gray-300 rounded-full focus:outline-none w-full"
-          />
-          <FaSearch className="absolute left-2 top-2 text-gray-500" />
-        </div>
-      </div>
+      {/* Right: Logout Button with Icon */}
+    <div className="flex items-center w-full sm:w-auto justify-end">
+      <button
+        onClick={handleLogout}  // Replace with your logout function
+        className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
+      >
+        <FaSignOutAlt className="mr-2" />  {/* Add the icon */}
+        <span>Logout</span>
+      </button>
+    </div>
 
       {/* Hamburger Icon (visible on small screens) */}
       <div className="sm:hidden">

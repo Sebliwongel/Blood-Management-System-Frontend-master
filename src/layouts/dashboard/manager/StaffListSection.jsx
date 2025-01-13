@@ -1,17 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { fetchStaff } from "./../../../services/apiservice";
+
+// Function to fetch staff data from the API
 
 const StaffListSection = () => {
-  const [staffList] = useState([
-    { id: 1, name: "John Doe", title: "collector" },
-    { id: 2, name: "Jane Smith", title: "collector" },
-    { id: 3, name: "Emily Johnson", title: "storemanager" },
-    { id: 4, name: "Michael Brown", title: "collector" },
-    { id: 5, name: "Sarah Davis", title: "collector" },
-  ]);
+  const [staffList, setStaffList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch staff data when the component mounts
+    const fetchData = async () => {
+      try {
+        const data = await fetchStaff();
+        setStaffList(data); // Update staffList state with the fetched data
+      } catch (err) {
+        setError('Failed to fetch staff');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty array ensures this effect runs once when the component mounts
 
   return (
     <div>
       <h2 className="text-2xl font-semibold">Staff</h2>
+      {loading && <p>Loading staff data...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
       <div className="mt-8">
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse border border-gray-300">
@@ -29,10 +47,10 @@ const StaffListSection = () => {
               {staffList.map((staff) => (
                 <tr key={staff.id} className="hover:bg-gray-100">
                   <td className="border border-gray-300 px-4 py-2">
-                    {staff.name}
+                    {staff.FirstName} {staff.MiddleName}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {staff.title}
+                    {staff.role}
                   </td>
                 </tr>
               ))}
